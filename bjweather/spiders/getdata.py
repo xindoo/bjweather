@@ -17,7 +17,6 @@ class GetdataSpider(scrapy.Spider):
     def parse(self, response):
         trs = response.xpath('//tr')
         isFirst = True
-
         for tr in trs:
             if isFirst:
                 isFirst = False
