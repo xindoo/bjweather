@@ -2,13 +2,13 @@
 import scrapy
 import re
 
-
+# 这个网站数据中加了好多换行和其他字符， 需要转换下才能用
 invisibleChar = re.compile(r'[\s]+')
 nonDigit = re.compile(r'[^\d]+')
 digit = re.compile(r'([-\d]+)[^-\d]+([-\d]+)')
 
 class GetdataSpider(scrapy.Spider):
-    usedUrl = set()
+    usedUrl = set()  # 用一个set保存已经爬取过的数据url  
     url = 'http://www.tianqihoubao.com'
     name = 'getdata'
     allowed_domains = ['www.tianqihoubao.com']
@@ -29,18 +29,17 @@ class GetdataSpider(scrapy.Spider):
             date = re.sub(nonDigit, '-', date)[0:-1]
             yield {
                 "date":date,
-                "maxT":maxT,
-                "minT":minT,
-                "weather":re.sub(invisibleChar, "",tds[1].xpath('./text()').extract()[0]),
-                "wind":re.sub(invisibleChar, "",tds[3].xpath('./text()').extract()[0])
+                "maxT":maxT,  # 最大温度
+                "minT":minT,  # 最小温度 
+                "weather":re.sub(invisibleChar, "",tds[1].xpath('./text()').extract()[0]),  # 天气情况
+                "wind":re.sub(invisibleChar, "",tds[3].xpath('./text()').extract()[0])  # 风力等级 
             }
         nextUrls = response.xpath('//div[@class="months"]/a/@href')
         self.usedUrl.add(response.url)
         for nextUrl in nextUrls: 
             url = self.url+nextUrl.extract()
             if url in self.usedUrl:
-                continue
-            print("*********" + url)
+                continue   # 爬过的就不爬了  
             yield scrapy.Request(url, callback=self.parse)
             break
 
