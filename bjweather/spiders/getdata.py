@@ -12,7 +12,7 @@ class GetdataSpider(scrapy.Spider):
     url = 'http://www.tianqihoubao.com'
     name = 'getdata'
     allowed_domains = ['www.tianqihoubao.com']
-    start_urls = ['http://www.tianqihoubao.com/lishi/beijing/month/201812.html']
+    start_urls = ['http://www.tianqihoubao.com/lishi/beijing/month/202010.html']
 
     def parse(self, response):
         trs = response.xpath('//tr')
